@@ -8,22 +8,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
+
 import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author user
- */
 public class SlidesGUI extends JPanel {
     private SlidesGame game;
     private int width;
     private boolean win;
-        
+    private int[][] a;
+    private int[][] afterMove;
+    
     public SlidesGUI()
     {
         game = new SlidesGame(4);
@@ -48,7 +44,7 @@ public class SlidesGUI extends JPanel {
         int w = getWidth();
         int h = getHeight();
         width = w / (game.SIZE + 2);
-        int[][] a = game.getBoard();
+        a = game.getBoard();
         int x, y;
         x = y = width;
         
@@ -82,21 +78,88 @@ public class SlidesGUI extends JPanel {
     {
     	public void keyPressed(KeyEvent event)
     	{
-    		System.out.println("in listiner pressed");
     		int key = event.getKeyCode();
     		if (key == event.VK_LEFT)
     		{
-    			System.out.println("left");
+    			for (int m=0; m<3; m++)
+			    	for (int i=0; i<game.SIZE; i++) 
+			    	{
+			    		for (int j=1; j<game.SIZE; j++)
+			    		{
+			    			if (a[i][j-1]==0)
+			    			{
+			    				a[i][j-1] = a[i][j];
+			    				a[i][j] = 0;
+			    			}
+			    		}
+			    	}
     		}
     		else if (key == event.VK_UP)
     		{
-    			System.out.println("up");
+    			for (int m=0; m<3; m++)
+	    			for (int i=1; i<game.SIZE; i++)
+	    				for (int j=0; j<game.SIZE; j++)
+	    				{
+	    					if (a[i-1][j]==0)
+	    					{
+	    						a[i-1][j]=a[i][j];
+	    						a[i][j]=0;
+	    					}
+
+	    				}
     		}   		
+    		else if (key == event.VK_DOWN)
+    		{
+    			for (int m=0; m<3; m++)
+	    			for (int i=0; i<game.SIZE-1; i++)
+		    				for (int j=0; j<game.SIZE; j++)
+		    				{
+		    					if (a[i+1][j]==0)
+		    					{
+		    						a[i+1][j]=a[i][j];
+		    						a[i][j]=0;
+		    					}
+		    				}
+    		}   
+    		else if (key == event.VK_RIGHT)
+    		{
+    			for (int m=0; m<3; m++)
+	    			for (int i=0; i<game.SIZE; i++)
+	    				for (int j=0; j<game.SIZE-1; j++)
+	    				{
+	    					if (a[i][j+1]==0)
+	    					{
+	    						a[i][j+1]=a[i][j];
+	    						a[i][j]=0;
+	    					}
+	    				}
+    		}   
+    		
+    		repaint();
+    		    	
+    	}
+    }
+    
+    private void copyArray(int[][] from, int[][] to)
+    {
+    	for (int i=0; i<game.SIZE; i++)
+    		for (int j=0; j<game.SIZE; j++)
+    			to[i][j] = from[i][j];
+    }
+    private void randomLocation()
+    {
+    	int[] location = new int[2];
+    	Random rand = new Random();    	
+    	location[0] = rand.nextInt(game.SIZE);
+    	location[1] = rand.nextInt(game.SIZE);  	
+    	
+    	while (a[location[0]][location[1]]!=0)
+    	{
+        	location[0] = rand.nextInt(game.SIZE);
+        	location[1] = rand.nextInt(game.SIZE);
     	}
     	
-        public void keyReleased(KeyEvent event) 
-        {
-        	
-        }
+    	a[location[0]][location[1]] = 2;
     }
+    
 }

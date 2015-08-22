@@ -12,14 +12,9 @@ public class SlidesBoard {
     {
         SIZE = s;
         board = new int[SIZE][SIZE];
-
-        int[] randomLoc = randomLocation();
-               
-        board[randomLoc[0]][randomLoc[1]] = 2;
+        randomLocation();
+        randomLocation();
         
-//      for(int i = 0; i < board.length; i++)
-//      for(int j = 0; j < board[i].length; j++)
-//      	board[i][j] = 1;
     }
        
     public int[][] getBoard()
@@ -32,14 +27,19 @@ public class SlidesBoard {
 
     }
            
-    private int[] randomLocation()
+    private void randomLocation()
     {
     	int[] location = new int[2];
-    	Random rand = new Random();
-    	
+    	Random rand = new Random();    	
     	location[0] = rand.nextInt(SIZE);
-    	location[1] = rand.nextInt(SIZE);
+    	location[1] = rand.nextInt(SIZE);  	
     	
-    	return location;
+    	while (board[location[0]][location[1]]!=0)
+    	{
+        	location[0] = rand.nextInt(SIZE);
+        	location[1] = rand.nextInt(SIZE);
+    	}
+    	
+    	board[location[0]][location[1]] = 2;
     }
 }
