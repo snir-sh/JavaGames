@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import java.util.Timer;
 
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
@@ -20,6 +21,7 @@ public class SlidesGUI extends JPanel {
     private int[][] a;
     private int[][] afterMove;
     
+    
     public SlidesGUI()
     {
         game = new SlidesGame(4);
@@ -27,6 +29,7 @@ public class SlidesGUI extends JPanel {
         addKeyListener(new Listener());
         setFocusable(true);
         requestFocus();
+        
     }
     
     public void paintComponent(Graphics g)
@@ -78,55 +81,68 @@ public class SlidesGUI extends JPanel {
     {
     	public void keyPressed(KeyEvent event)
     	{
+    		
     		int key = event.getKeyCode();
     		if (key == event.VK_LEFT)
     		{
-    			for (int m=0; m<3; m++)
-			    	for (int i=0; i<game.SIZE; i++) 
-			    	{
-			    		for (int j=1; j<game.SIZE; j++)
-			    		{
-			    			if (a[i][j-1]==0)
-			    			{
-			    				a[i][j-1] = a[i][j];
-			    				a[i][j] = 0;
-			    			}
-			    		}
-			    	}
+			   	for (int i=0; i<game.SIZE; i++) 
+			   	{
+			   		for (int j=game.SIZE-1; j>0; j--)
+			   		{
+//			   			if (a[i][j-1]==a[i][j])
+//			   			{
+//			   				a[i][j-1]=2*a[i][j-1];
+//			   				a[i][j]=0;
+//			   			}
+			   			if (a[i][j-1]==0)
+			   			{
+			   				a[i][j-1] = a[i][j];
+			   				a[i][j] = 0;
+			   			}
+			   		}
+			   	}
     		}
     		else if (key == event.VK_UP)
     		{
-    			for (int m=0; m<3; m++)
-	    			for (int i=1; i<game.SIZE; i++)
-	    				for (int j=0; j<game.SIZE; j++)
-	    				{
-	    					if (a[i-1][j]==0)
-	    					{
-	    						a[i-1][j]=a[i][j];
-	    						a[i][j]=0;
-	    					}
-
-	    				}
+    			for (int i=game.SIZE-1; i>0; i--)
+    				for (int j=0; j<game.SIZE; j++)
+    				{
+//			   			if (a[i-1][j]==a[i][j])
+//			   			{
+//			   				a[i-1][j]=2*a[i-1][j];
+//			   				a[i][j]=0;
+//			   			}
+    					if (a[i-1][j]==0)
+    					{
+    						a[i-1][j]=a[i][j];
+    						a[i][j]=0;
+    					}
+    				}
     		}   		
     		else if (key == event.VK_DOWN)
     		{
-    			for (int m=0; m<3; m++)
-	    			for (int i=0; i<game.SIZE-1; i++)
-		    				for (int j=0; j<game.SIZE; j++)
-		    				{
-		    					if (a[i+1][j]==0)
-		    					{
-		    						a[i+1][j]=a[i][j];
-		    						a[i][j]=0;
-		    					}
-		    				}
+    			for (int i=0; i<game.SIZE; i++)
+	    				for (int j=0; j<game.SIZE; j++)
+	    					for (int m=1; m<game.SIZE; m++)
+	    					{
+	    						if (a[game.SIZE-m][j]==0)
+	    						{
+	    							a[game.SIZE-m][j]=a[game.SIZE-m-1][j];
+	    							a[game.SIZE-m-1][j]=0;
+	    						}
+	    					}
+
     		}   
     		else if (key == event.VK_RIGHT)
     		{
-    			for (int m=0; m<3; m++)
 	    			for (int i=0; i<game.SIZE; i++)
 	    				for (int j=0; j<game.SIZE-1; j++)
 	    				{
+//				   			if (a[i][j+1]==a[i][j])
+//				   			{
+//				   				a[i][j+1]=2*a[i][j+1];
+//				   				a[i][j]=0;
+//				   			}
 	    					if (a[i][j+1]==0)
 	    					{
 	    						a[i][j+1]=a[i][j];
@@ -134,8 +150,9 @@ public class SlidesGUI extends JPanel {
 	    					}
 	    				}
     		}   
-    		
+    		randomLocation();
     		repaint();
+    		
     		    	
     	}
     }
